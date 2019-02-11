@@ -58,7 +58,7 @@ module.exports = function (configuration, path, callback) {
 
   function readDependencyList (done) {
     var child = spawn(
-      'npm', ['ls', '--production', '--json'], {cwd: path}
+      'npm', ['ls', '--production', '--json'], { cwd: path }
     )
     var outputError
     var json
