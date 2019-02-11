@@ -1,6 +1,6 @@
 List authors and contributors of your npm dependencies.
 
-# Use
+# Command Line Program
 
 To run with `npx`:
 
