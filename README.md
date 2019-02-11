@@ -12,7 +12,7 @@ npx npm-authors-contributors
 To install and use `npm-authors-contributors` globally:
 
 ```bash
-npm install --global licensee
+npm install --global npm-authors-contributors
 cd your-npm-project
 npm-authors-contributors
 ```
