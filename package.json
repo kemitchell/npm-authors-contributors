@@ -26,7 +26,6 @@
   "license": "MIT",
   "repository": "kemitchell/npm-authors-contributors.js",
   "scripts": {
-    "style": "standard",
-    "test": "tap tests/**/test.js"
+    "style": "standard"
   }
 }

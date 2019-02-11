@@ -1,7 +1,0 @@
-{
-  "name": "mit-not-allowed",
-  "dependencies": {
-    "mit-licensed": "1.0.0"
-  },
-  "private": true
-}
