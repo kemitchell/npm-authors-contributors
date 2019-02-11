@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+var docopt = require('docopt')
+
+var USAGE = [
+  'List npm package dependency authors and contributors.',
+  '',
+  'Usage:',
+  '  npm-authors-contributors [options]',
+  '',
+  'Options:',
+  '  --production          Do not check devDependencies.',
+  '  --ndjson              Print newline-delimited JSON objects.',
+  '  -h, --help            Print this screen to standard output.',
+  '  -v, --version         Print version to standard output.'
+].join('\n')
+
+var options = docopt.docopt(USAGE, {
+  version: require('./package.json').version
+})
+
+var cwd = process.cwd()
+var configuration = { productionOnly: options['--production'] }
+require('./')(configuration, cwd, function (error, people) {
+  if (error) {
+    process.stderr.write(error.message + '\n')
+    process.exit(1)
+  } else {
+    var ndjson = !!options['--ndjson']
+    people.forEach(function (person) {
+      print(person, ndjson)
+    })
+    process.exit(0)
+  }
+})
+
+function print (person, ndjson) {
+  if (ndjson) {
+    process.stdout.write(JSON.stringify(person) + '\n')
+  } else {
+    var string = ''
+    if (person.name) string = person.name
+    if (person.email) {
+      var emailPart = '<' + person.email + '>'
+      if (string.length === 0) string = emailPart
+      else string += ' ' + emailPart
+    }
+    if (person.url) {
+      var urlPart = '<' + person.url + '>'
+      if (string.length === 0) string = urlPart
+      else string += ' ' + urlPart
+    }
+    process.stdout.write(string + '\n')
+  }
+}

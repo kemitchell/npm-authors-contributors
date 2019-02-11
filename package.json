@@ -1,36 +1,30 @@
 {
-  "name": "licensee",
-  "description": "check dependency licenses against rules",
-  "version": "5.0.0",
+  "name": "npm-authors-contributors",
+  "description": "list authors and contributors of your npm dependencies",
+  "version": "0.0.0",
   "author": "Kyle E. Mitchell <kyle@kemitchell.com> (https://kemitchell.com/)",
-  "contributors": [
-    "Jakob Krigovsky <jakob@krigovsky.com>"
-  ],
   "dependencies": {
     "docopt": "^0.6.2",
+    "fast-deep-equal": "^2.0.1",
     "fs-access": "^2.0.0",
     "json-parse-errback": "^2.0.1",
     "read-package-tree": "^5.2.1",
     "run-parallel": "^1.1.9",
-    "semver": "^5.6.0",
-    "simple-concat": "^1.0.0",
-    "spdx-expression-validate": "^1.0.1",
-    "spdx-satisfies": "^4.0.0"
+    "simple-concat": "^1.0.0"
   },
-  "bin": "./licensee",
+  "bin": "./bin",
   "files": [
     "LICENSE",
-    "NOTICE",
     "index.js",
-    "licensee"
+    "bin"
   ],
   "devDependencies": {
     "spawn-sync": "^2.0.0",
     "standard": "^11.0.1",
     "tap": "^12.1.0"
   },
-  "license": "Apache-2.0",
-  "repository": "jslicense/licensee.js",
+  "license": "MIT",
+  "repository": "kemitchell/npm-authors-contributors.js",
   "scripts": {
     "style": "standard",
     "test": "tap tests/**/test.js"

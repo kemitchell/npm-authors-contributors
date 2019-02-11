@@ -1,57 +1,59 @@
-module.exports = licensee
-
-var licenseSatisfies = require('spdx-satisfies')
+var fastDeepEqual = require('fast-deep-equal')
 var parseJSON = require('json-parse-errback')
 var readPackageTree = require('read-package-tree')
 var runParallel = require('run-parallel')
-var satisfies = require('semver').satisfies
 var simpleConcat = require('simple-concat')
 var spawn = require('child_process').spawn
-var validSPDX = require('spdx-expression-validate')
 
-function licensee (configuration, path, callback) {
-  if (!validConfiguration(configuration)) {
-    callback(new Error('Invalid configuration'))
-  } else if (!validSPDX(configuration.license)) {
-    callback(new Error('Invalid license expression'))
+module.exports = function (configuration, path, callback) {
+  if (configuration.productionOnly) {
+    // In order to ignore devDependencies, we need to read:
+    //
+    // 1. the dependencies-only dependency graph, from
+    //    `npm ls --json --production`
+    //
+    // 2. the structure of `node_modules` and `package.json`
+    //    files within it, with read-package-tree.
+    //
+    // `npm ls` calls read-package-tree internally, but does
+    // lots of npm-specific post-processing to produce the
+    // dependency tree.  Calling read-package-tree twice, at
+    // the same time, is far from efficient.  But it works,
+    // and doing so helps keep this package small.
+    runParallel({
+      dependencies: readDependencyList,
+      packages: readFilesystemTree
+    }, function (error, trees) {
+      if (error) callback(error)
+      else withTrees(trees.packages, trees.dependencies)
+    })
   } else {
-    if (configuration.productionOnly) {
-      // In order to ignore devDependencies, we need to read:
-      //
-      // 1. the dependencies-only dependency graph, from
-      //    `npm ls --json --production`
-      //
-      // 2. the structure of `node_modules` and `package.json`
-      //    files within it, with read-package-tree.
-      //
-      // `npm ls` calls read-package-tree internally, but does
-      // lots of npm-specific post-processing to produce the
-      // dependency tree.  Calling read-package-tree twice, at
-      // the same time, is far from efficient.  But it works,
-      // and doing so helps keep this package small.
-      runParallel({
-        dependencies: readDependencyList,
-        packages: readFilesystemTree
-      }, function (error, trees) {
-        if (error) callback(error)
-        else withTrees(trees.packages, trees.dependencies)
-      })
-    } else {
-      // If we are analyzing _all_ installed dependencies,
-      // and don't care whether they're devDependencies
-      // or not, just read `node_modules`.  We don't need
-      // the dependency graph.
-      readFilesystemTree(function (error, packages) {
-        if (error) callback(error)
-        else withTrees(packages, false)
-      })
-    }
+    // If we are analyzing _all_ installed dependencies,
+    // and don't care whether they're devDependencies
+    // or not, just read `node_modules`.  We don't need
+    // the dependency graph.
+    readFilesystemTree(function (error, packages) {
+      if (error) callback(error)
+      else withTrees(packages, false)
+    })
   }
 
   function withTrees (packages, dependencies) {
-    callback(null, findIssues(
+    var results = findAuthorsContributors(
       configuration, packages, dependencies, []
-    ))
+    )
+    var people = []
+    results.forEach(function (result) {
+      var author = result.author
+      if (author && !includes(people, author)) people.push(author)
+      var contributors = result.contributors
+      if (contributors) {
+        contributors.forEach(function (contributor) {
+          if (!includes(people, contributor)) people.push(contributor)
+        })
+      }
+    })
+    callback(null, people)
   }
 
   function readDependencyList (done) {
@@ -113,35 +115,7 @@ function flattenDependencyTree (graph, object) {
   })
 }
 
-function validConfiguration (configuration) {
-  return (
-    isObject(configuration) &&
-    // Validate `license` property.
-    configuration.hasOwnProperty('license') &&
-    isString(configuration.license) &&
-    configuration.license.length > 0 && (
-      configuration.hasOwnProperty('whitelist')
-        ? (
-          // Validate `whitelist` property.
-          isObject(configuration.whitelist) &&
-          Object.keys(configuration.whitelist)
-            .every(function (key) {
-              return isString(configuration.whitelist[key])
-            })
-        ) : true
-    )
-  )
-}
-
-function isObject (argument) {
-  return typeof argument === 'object'
-}
-
-function isString (argument) {
-  return typeof argument === 'string'
-}
-
-function findIssues (configuration, children, dependencies, results) {
+function findAuthorsContributors (configuration, children, dependencies, results) {
   if (Array.isArray(children)) {
     children.forEach(function (child) {
       if (
@@ -149,10 +123,10 @@ function findIssues (configuration, children, dependencies, results) {
         appearsIn(child, dependencies)
       ) {
         results.push(resultForPackage(configuration, child))
-        findIssues(configuration, child, dependencies, results)
+        findAuthorsContributors(configuration, child, dependencies, results)
       }
       if (child.children) {
-        findIssues(configuration, child.children, dependencies, results)
+        findAuthorsContributors(configuration, child.children, dependencies, results)
       }
     })
     return results
@@ -170,11 +144,8 @@ function appearsIn (installed, dependencies) {
 }
 
 function resultForPackage (configuration, tree) {
-  var licenseExpression = configuration.license
-  var whitelist = configuration.whitelist || {}
-  var result = {
+  return {
     name: tree.package.name,
-    license: tree.package.license,
     author: tree.package.author,
     contributors: tree.package.contributors,
     repository: tree.package.repository,
@@ -183,30 +154,10 @@ function resultForPackage (configuration, tree) {
     parent: tree.parent,
     path: tree.path
   }
-  var whitelisted = Object.keys(whitelist).some(function (name) {
-    return (
-      tree.package.name === name &&
-      satisfies(tree.package.version, whitelist[name]) === true
-    )
+}
+
+function includes (people, person) {
+  return people.some(function (existingPerson) {
+    return fastDeepEqual(person, existingPerson)
   })
-  if (whitelisted) {
-    result.approved = true
-    result.whitelisted = true
-  } else {
-    var matchesRule = (
-      licenseExpression &&
-      validSPDX(licenseExpression) &&
-      tree.package.license &&
-      typeof tree.package.license === 'string' &&
-      validSPDX(tree.package.license) &&
-      licenseSatisfies(tree.package.license, licenseExpression)
-    )
-    if (matchesRule) {
-      result.approved = true
-      result.rule = true
-    } else {
-      result.approved = false
-    }
-  }
-  return result
 }
