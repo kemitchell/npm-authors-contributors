@@ -39,4 +39,4 @@ The package exports an asynchronous function of three arguments:
 
 2. The path of the package to check.
 
-3. An error-first callback that yields an array of objects, one per author and contributor.
+3. An error-first callback that yields an array of objects, one per author and contributor, with optional `name`, `url`, and `email` properties.
