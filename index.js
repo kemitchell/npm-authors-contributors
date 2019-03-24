@@ -45,11 +45,12 @@ module.exports = function (configuration, path, callback) {
     var people = []
     results.forEach(function (result) {
       var author = result.author
-      if (author && !includes(people, author)) people.push(author)
+      var packageName = result.name
+      if (author) addPersonToList(people, author, packageName)
       var contributors = result.contributors
       if (contributors) {
         contributors.forEach(function (contributor) {
-          if (!includes(people, contributor)) people.push(contributor)
+          addPersonToList(people, contributor, packageName)
         })
       }
     })
@@ -156,8 +157,23 @@ function resultForPackage (configuration, tree) {
   }
 }
 
-function includes (people, person) {
-  return people.some(function (existingPerson) {
-    return fastDeepEqual(person, existingPerson)
+var personProperties = ['name', 'email', 'url']
+
+function addPersonToList (list, newPerson, packageName) {
+  var match = list.find(function (existingPerson) {
+    var withoutPackages = {}
+    personProperties.forEach(function (property) {
+      withoutPackages[property] = existingPerson[property]
+    })
+    return fastDeepEqual(withoutPackages, newPerson)
   })
+  if (match) {
+    if (match.packages.indexOf(packageName) === -1) {
+      match.packages.push(packageName)
+    }
+    return
+  }
+  var record = Object.assign({}, newPerson)
+  record.packages = [packageName]
+  list.push(record)
 }

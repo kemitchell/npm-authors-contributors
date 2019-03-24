@@ -49,6 +49,7 @@ function print (person, ndjson) {
       if (string.length === 0) string = urlPart
       else string += ' ' + urlPart
     }
+    string += ': ' + person.packages.join(', ')
     process.stdout.write(string + '\n')
   }
 }
