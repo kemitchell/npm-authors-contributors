@@ -48,7 +48,7 @@ module.exports = function (configuration, path, callback) {
       var packageName = result.name
       if (author) addPersonToList(people, author, packageName)
       var contributors = result.contributors
-      if (contributors) {
+      if (Array.isArray(contributors)) {
         contributors.forEach(function (contributor) {
           addPersonToList(people, contributor, packageName)
         })
