@@ -14,7 +14,7 @@
         "fs-access": "^2.0.0",
         "json-parse-errback": "^2.0.1",
         "read-package-tree": "^5.3.1",
-        "run-parallel": "^1.1.9",
+        "run-parallel": "^1.2.0",
         "simple-concat": "^1.0.0"
       },
       "bin": {
@@ -1882,6 +1882,25 @@
         "node": ">=6"
       }
     },
+    "node_modules/queue-microtask": {
+      "version": "1.2.3",
+      "resolved": "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz",
+      "integrity": "sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==",
+      "funding": [
+        {
+          "type": "github",
+          "url": "https://github.com/sponsors/feross"
+        },
+        {
+          "type": "patreon",
+          "url": "https://www.patreon.com/feross"
+        },
+        {
+          "type": "consulting",
+          "url": "https://feross.org/support"
+        }
+      ]
+    },
     "node_modules/react-is": {
       "version": "16.8.1",
       "resolved": "https://registry.npmjs.org/react-is/-/react-is-16.8.1.tgz",
@@ -2045,9 +2064,26 @@
       }
     },
     "node_modules/run-parallel": {
-      "version": "1.1.9",
-      "resolved": "https://registry.npmjs.org/run-parallel/-/run-parallel-1.1.9.tgz",
-      "integrity": "sha512-DEqnSRTDw/Tc3FXf49zedI638Z9onwUotBMiUFKmrO2sdFKIbXamXGQ3Axd4qgphxKB4kw/qP1w5kTxnfU1B9Q=="
+      "version": "1.2.0",
+      "resolved": "https://registry.npmjs.org/run-parallel/-/run-parallel-1.2.0.tgz",
+      "integrity": "sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==",
+      "funding": [
+        {
+          "type": "github",
+          "url": "https://github.com/sponsors/feross"
+        },
+        {
+          "type": "patreon",
+          "url": "https://www.patreon.com/feross"
+        },
+        {
+          "type": "consulting",
+          "url": "https://feross.org/support"
+        }
+      ],
+      "dependencies": {
+        "queue-microtask": "^1.2.2"
+      }
     },
     "node_modules/rxjs": {
       "version": "5.5.12",
@@ -3903,6 +3939,11 @@
       "integrity": "sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==",
       "dev": true
     },
+    "queue-microtask": {
+      "version": "1.2.3",
+      "resolved": "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz",
+      "integrity": "sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A=="
+    },
     "react-is": {
       "version": "16.8.1",
       "resolved": "https://registry.npmjs.org/react-is/-/react-is-16.8.1.tgz",
@@ -4039,9 +4080,12 @@
       }
     },
     "run-parallel": {
-      "version": "1.1.9",
-      "resolved": "https://registry.npmjs.org/run-parallel/-/run-parallel-1.1.9.tgz",
-      "integrity": "sha512-DEqnSRTDw/Tc3FXf49zedI638Z9onwUotBMiUFKmrO2sdFKIbXamXGQ3Axd4qgphxKB4kw/qP1w5kTxnfU1B9Q=="
+      "version": "1.2.0",
+      "resolved": "https://registry.npmjs.org/run-parallel/-/run-parallel-1.2.0.tgz",
+      "integrity": "sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==",
+      "requires": {
+        "queue-microtask": "^1.2.2"
+      }
     },
     "rxjs": {
       "version": "5.5.12",
