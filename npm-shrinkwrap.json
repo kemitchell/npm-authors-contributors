@@ -15,7 +15,7 @@
         "json-parse-errback": "^2.0.1",
         "read-package-tree": "^5.3.1",
         "run-parallel": "^1.2.0",
-        "simple-concat": "^1.0.0"
+        "simple-concat": "^1.0.1"
       },
       "bin": {
         "npm-authors-contributors": "bin"
@@ -2152,9 +2152,23 @@
       "dev": true
     },
     "node_modules/simple-concat": {
-      "version": "1.0.0",
-      "resolved": "https://registry.npmjs.org/simple-concat/-/simple-concat-1.0.0.tgz",
-      "integrity": "sha1-c0TLuLbib7J9ZrL8hvn21Zl1IcY="
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/simple-concat/-/simple-concat-1.0.1.tgz",
+      "integrity": "sha512-cSFtAPtRhljv69IK0hTVZQ+OfE9nePi/rtJmw5UjHeVyVroEqJXP1sFztKUy1qU+xvz3u/sfYJLa947b7nAN2Q==",
+      "funding": [
+        {
+          "type": "github",
+          "url": "https://github.com/sponsors/feross"
+        },
+        {
+          "type": "patreon",
+          "url": "https://www.patreon.com/feross"
+        },
+        {
+          "type": "consulting",
+          "url": "https://feross.org/support"
+        }
+      ]
     },
     "node_modules/slash": {
       "version": "1.0.0",
@@ -4139,9 +4153,9 @@
       "dev": true
     },
     "simple-concat": {
-      "version": "1.0.0",
-      "resolved": "https://registry.npmjs.org/simple-concat/-/simple-concat-1.0.0.tgz",
-      "integrity": "sha1-c0TLuLbib7J9ZrL8hvn21Zl1IcY="
+      "version": "1.0.1",
+      "resolved": "https://registry.npmjs.org/simple-concat/-/simple-concat-1.0.1.tgz",
+      "integrity": "sha512-cSFtAPtRhljv69IK0hTVZQ+OfE9nePi/rtJmw5UjHeVyVroEqJXP1sFztKUy1qU+xvz3u/sfYJLa947b7nAN2Q=="
     },
     "slash": {
       "version": "1.0.0",
